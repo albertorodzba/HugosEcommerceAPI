@@ -1,0 +1,1 @@
+This file contains in a unique class every environment variable used in this project

@@ -1,0 +1,22 @@
+scaffolding from console project
+
+dotnet ef dbcontext scaffold "server=localhost;Port=3306;database=helperSystem;user=root;password=Nem02183330156" 
+MySql.EntityFrameworkCore --output-dir Models "-f" to overwrite --namespace HelperSystem.Domain.Models
+
+dotnet ef dbcontext scaffold "server=localhost;Port=3306;database=helperSystem;user=root;password=Nem02183330156" 
+MySql.EntityFrameworkCore --output-dir D:\Programming\MyProjects\Helper\HelperSystemBackend\HelperSystem.Domain\Models --namespace HelperSystem.Domain.Models
+
+SCAFFOLDING WITHOUT CONTEXT
+
+
+ERRORES BASICOS DE UNA CONSULTA MySql
+    - Que venga nulo
+    - Que no pase la validacion
+    - Que no haya elementos que mostrar
+    - Que haya un error al retornar una respuesta
+
+Validaciones
+No espacios en campos que no lo requieran
+    Email
+
+Se tiene que limitar el numero de requests en los formularios sin autenticacion como contact us
