@@ -148,6 +148,7 @@ public class AuthController : ControllerBase
 
             //SE PREPARAN LOS PARAMETROS DE MYSQL PARA LA QUERY
             string query = "SELECT * FROM user WHERE email = @email OR username = @username";
+            
             List<MySqlParameter> parameters = new List<MySqlParameter>(){
                     new MySqlParameter("@email", userLogin.Email),
                     new MySqlParameter("@username", userLogin.Username)
@@ -180,8 +181,11 @@ public class AuthController : ControllerBase
             //creacion de token
             token = _jwtService.GenerateToken(user.PkUser, user.Username, (int)user.Role);
         }
-        catch (System.Exception ex)
+        catch
         {
+            Console.WriteLine("Exception desde signin controler");
+            throw;
+            // throw new Exception(ex.ToString());
             return BadRequest(new { success = false, message = "An error occurred, please report this issue" });
         }
         return Ok(new { success = true, message = $"Welcome! {user.Username}", token = token });
@@ -191,34 +195,39 @@ public class AuthController : ControllerBase
     //VERIFICA SI UN USUARIO ESTA REGISTRADO
     public bool CheckIfExistsUser(string email, string username)
     {
-        _logger.LogDebug(username);
-        _logger.LogDebug(email);
-        string query = "SELECT * FROM user WHERE email = @email OR username = @username";
-        List<MySqlParameter> parameters = new List<MySqlParameter>(){
+        try{
+            _logger.LogDebug(username);
+            _logger.LogDebug(email);
+            string query = "SELECT * FROM user WHERE email = @email OR username = @username";
+            List<MySqlParameter> parameters = new List<MySqlParameter>(){
                     new MySqlParameter("@username", username),
                     new MySqlParameter("@email", email),
                 };
 
-        User user = new User();
-        _db.OpenConnection();
-        var reader = _db.MysqlExecuteQuery(query, parameters);
-        while (reader.Read())
-        {
-            user.PkUser = Convert.ToInt64(reader[0]);
-            user.Username = reader[1].ToString();
-            user.Email = reader[2].ToString();
-            user.Password = reader[3].ToString();
-            user.Role = Convert.ToInt32(reader[4]);
-        }
-        _db.CloseAll();
+            User user = new User();
+            _db.OpenConnection();
+            var reader = _db.MysqlExecuteQuery(query, parameters);
+            while (reader.Read())
+            {
+                user.PkUser = Convert.ToInt64(reader[0]);
+                user.Username = reader[1].ToString();
+                user.Email = reader[2].ToString();
+                user.Password = reader[3].ToString();
+                user.Role = Convert.ToInt32(reader[4]);
+            }
+            _db.CloseAll();
 
-        //USUARIO NO ENCONTRADO
-        if (user.Email == null || user.Username == null)
-        {
-            return false;
-        }
+            //USUARIO NO ENCONTRADO
+            if (user.Email == null || user.Username == null)
+            {
+                return false;
+            }
 
-        return true;
+            return true;
+        }catch(Exception ex){
+            throw;
+        }
+        
     }
 
 }

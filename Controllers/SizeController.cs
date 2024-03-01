@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 
 using hugosEcommerce_api.Helpers;
+using hugosEcommerce_api.Errors;
 
 namespace hugosEcommerce_api.Controllers;
 
@@ -35,7 +36,8 @@ public class SizeController : ControllerBase
             }
             this._databaseConfig.CloseAll();
 
-            if(sizes == null) return BadRequest("There are not sizes created.");
+            // if(sizes == null) return BadRequest("There are not sizes created.");
+            if (sizes == null) throw new NoDataFoundException();
         }
         catch (Exception ex)
         {
@@ -65,14 +67,14 @@ public class SizeController : ControllerBase
             };
             this._databaseConfig.MysqlExecuteNonQuery(storeQuery, parameters);
             this._databaseConfig.CloseAll();
+            return Ok(sizeToStore);
 
         }
         catch (System.Exception ex)
         {
-            return BadRequest(ex.Message);
+            throw;
         }
 
-        return Ok(sizeToStore);
     }
 
     [HttpPut("update/{id}")]
@@ -95,13 +97,13 @@ public class SizeController : ControllerBase
             this._databaseConfig.OpenConnection();
             this._databaseConfig.MysqlExecuteNonQuery(storeQuery, parameters);
             this._databaseConfig.CloseAll();
+            return Ok( new {success = true, message = $"Value Changed To { sizeToUpdate.SizeName}  Successfully"});
 
         }
         catch (System.Exception ex)
         {
-            return BadRequest(ex.Message);
+            throw;
         }
         this._logger.LogInformation($"New Value updated to {sizeToUpdate.SizeName}");
-        return Ok( new {success = true, message = $"Value Changed To { sizeToUpdate.SizeName}  Successfully"});
     }
 }

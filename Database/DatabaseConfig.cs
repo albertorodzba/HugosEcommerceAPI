@@ -25,13 +25,14 @@ public class DatabaseConfig : IDatabaseConfig
         try
         {
             connection = new MySqlConnection(stringConnection);
-
             connection.Open();
             this._logger.LogInformation("Conexion establecida");
         }
-        catch (MySqlException exception)
+        catch (Exception exception)
         {
             this._logger.LogInformation("Error al establecer la conexion");
+            throw;
+            // throw new Exception(exception.ToString());
             this._logger.LogError(exception.Message);
         }
     }

@@ -1,6 +1,7 @@
 
 using System.Text;
 using hugosEcommerce_api.Database;
+using hugosEcommerce_api.Filters;
 using hugosEcommerce_api.Helpers.FilesValidator;
 using hugosEcommerce_api.Models;
 using hugosEcommerce_api.Services.Jwt;
@@ -20,7 +21,7 @@ builder.Host.ConfigureLogging(logging =>
     logging.AddConsole();
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers( (config) => config.Filters.Add(typeof(GlobalExceptionHandler)));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 // builder.Services.AddSwaggerGen();
